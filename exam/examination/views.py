@@ -56,21 +56,7 @@ class CourseDeleteView(DeleteView):
     template_name = 'examination/course_confirm_delete.html'  # Corrected here
     success_url = reverse_lazy('course_list')
 
-def generate_transcript(request, student_id):
-    student = Student.objects.get(pk=student_id)
-    exam_results = student.exam_results.select_related('course', 'semester')
 
-    # Calculate GPA (example: simple average)
-    total_credits = sum(result.course.credit_hours for result in exam_results)
-    total_points = sum(result.score * result.course.credit_hours for result in exam_results)
-    gpa = total_points / total_credits if total_credits > 0 else 0
-
-    context = {
-        'student': student,
-        'exam_results': exam_results,
-        'gpa': gpa,
-    }
-    return render(request, 'students/transcript.html', context)
 
 class BatchDetailView(DetailView):
     model = Batch
@@ -223,6 +209,98 @@ class ExamResultDeleteView(DeleteView):
     model = ExamResult
     template_name = 'exam_results/exam_result_confirm_delete.html'
     success_url = reverse_lazy('exam_result_list')
+
+
+
+
+# Gpa calcualtion ..........  
+
+def calculate_gpa_points(score):
+    if 90 <= score <= 100:
+        return 4.0  # A
+    elif 75 <= score < 90:
+        return 3.0  # B
+    elif 60 <= score < 75:
+        return 2.0  # C
+    else:
+        return 1.0  # D
+
+def generate_transcript(request, student_id):
+    student = Student.objects.get(pk=student_id)
+    exam_results = student.exam_results.select_related('course', 'semester')
+    
+    # Initialize storage for semester information
+    semesters = {}
+    total_credits = 0
+    total_points = 0
+    
+    # Process each exam result
+    for result in exam_results:
+        semester = result.semester
+        
+        # Initialize the semester data if not already done
+        if semester not in semesters:
+            semesters[semester] = {
+                'courses': [],
+                'credits': 0,
+                'points': 0,
+                'sgpa': 0
+            }
+        
+        credits = result.course.credit_hours
+        points = calculate_gpa_points(result.score) * credits  # Calculate points based on GPA points
+        
+        # Determine the grade based on the score
+        grade = ''
+        if 90 <= result.score <= 100:
+            grade = 'A'
+        elif 75 <= result.score < 90:
+            grade = 'B'
+        elif 60 <= result.score < 75:
+            grade = 'C'
+        else:
+            grade = 'D'  # D or lower
+        
+        # Add the grade to the result object for display in the template
+        result.grade = grade
+        
+        # Update semester data
+        semesters[semester]['courses'].append(result)
+        semesters[semester]['credits'] += credits
+        semesters[semester]['points'] += points
+        
+        # Update overall totals
+        total_credits += credits
+        total_points += points
+    
+    # Calculate SGPA for each semester
+    for semester in semesters:
+        if semesters[semester]['credits'] > 0:
+            semesters[semester]['sgpa'] = semesters[semester]['points'] / semesters[semester]['credits']
+    
+    # Calculate OGPA
+    ogpa = total_points / total_credits if total_credits > 0 else 0
+
+    context = {
+        'student': student,
+        'semesters': semesters,
+        'ogpa': ogpa,
+    }
+    return render(request, 'students/transcript.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # login and logout......

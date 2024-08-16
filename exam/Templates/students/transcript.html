@@ -1,0 +1,46 @@
+{% extends "examination/home.html" %}
+
+{% block title %}Transcript{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Transcript for {{ student.firstname }} {{ student.last_name }}</h2>
+
+    <table class="table table-bordered mt-4">
+        <thead>
+            <tr>
+                <th>Semester</th>
+                <th>Course Code</th>
+                <th>Course Name</th>
+                <th>Credit Hours</th>
+                <th>Score</th>
+                <th>Grade</th>
+                <th>SGPA</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for semester, data in semesters.items %}
+                {% for course in data.courses %}
+                <tr>
+                    {% if forloop.first %}
+                    <td rowspan="{{ data.courses|length }}">{{ semester.name }}</td>
+                    {% endif %}
+                    <td>{{ course.course.code }}</td>
+                    <td>{{ course.course.name }}</td>
+                    <td>{{ course.course.credit_hours }}</td>
+                    <td>{{ course.score }}</td>
+                    <td>{{ course.grade }}</td>
+                    {% if forloop.last %}
+                    <td rowspan="{{ data.courses|length }}">{{ data.sgpa|floatformat:2 }}</td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="mt-4">
+        <strong>Overall GPA (OGPA):</strong> {{ ogpa|floatformat:2 }}
+    </div>
+</div>
+{% endblock %}
