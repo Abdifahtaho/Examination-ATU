@@ -25,9 +25,8 @@
                         {{ form|crispy }}
                         {% if request.GET.next %}
                         <input type="hidden" name="next" value="{{ request.GET.next }}">
-                    {% endif %}
+                        {% endif %}
                         <button type="submit" class="btn btn-primary">Login</button>
-
                     </form>
                 </div>
                 <div class="card-footer text-center">

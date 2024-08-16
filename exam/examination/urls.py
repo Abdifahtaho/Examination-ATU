@@ -4,9 +4,11 @@ from .views import StudentListView, StudentCreateView, StudentUpdateView, Studen
 from .views import FacultyListView, FacultyCreateView, FacultyUpdateView, FacultyDeleteView
 from .views import BatchListView, BatchCreateView, BatchUpdateView, BatchDeleteView
 from .views import ExamResultListView, ExamResultCreateView, ExamResultUpdateView, ExamResultDeleteView,register
+from django.contrib.auth import views as auth_views
+from .views import login_view, logout_view, register
 
 urlpatterns = [
-    path('', home, name='home'),
+    path('home', home, name='home'),
     path('students/<int:student_id>/transcript/', generate_transcript, name='generate_transcript'),
     path('courses/', CourseListView.as_view(), name='course_list'),
     path('courses/create/', CourseCreateView.as_view(), name='course_create'),
@@ -43,4 +45,7 @@ urlpatterns = [
     path('exam_results/<int:pk>/update/', ExamResultUpdateView.as_view(), name='exam_result_update'),
     path('exam_results/<int:pk>/delete/', ExamResultDeleteView.as_view(), name='exam_result_delete'),
     path('register/', register, name='register'),
+    path('login/', login_view, name='login'),
+    path('accounts/logout/', logout_view, name='logout'),
+    
 ]
