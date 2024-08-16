@@ -1,0 +1,12 @@
+{% extends 'examination/home.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+    <h1>{% if object %}Update{% else %}Create{% endif %} Exam Result</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-success">{% if object %}Update{% else %}Create{% endif %}</button>
+    </form>
+</div>
+{% endblock %}

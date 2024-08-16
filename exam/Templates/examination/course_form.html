@@ -1,0 +1,16 @@
+{%extends "examination/home.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Create Course{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Create a New Course</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% crispy form %}
+        <button type="submit" class="btn btn-primary">Create Course</button>
+    </form>
+    <a href="{% url 'course_list' %}" class="btn btn-secondary mt-3">Back to Courses</a>
+</div>
+{% endblock %}

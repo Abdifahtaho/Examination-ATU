@@ -1,0 +1,19 @@
+{%extends "examination/home.html" %}
+
+{% block content %}
+<div class="container">
+    <h2>Faculty List</h2>
+    <a href="{% url 'faculty_create' %}" class="btn btn-primary">Add New Faculty</a>
+    <ul class="list-group mt-3">
+        {% for faculty in faculties %}
+        <li class="list-group-item">
+            {{ faculty.name }}
+            <a href="{% url 'faculty_update' faculty.pk %}" class="btn btn-secondary btn-sm float-end ms-2">Edit</a>
+            <a href="{% url 'faculty_delete' faculty.pk %}" class="btn btn-danger btn-sm float-end">Delete</a>
+        </li>
+        {% empty %}
+        <li class="list-group-item">No faculties found.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'examination/home.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Batch List</h1>
+    <a href="{% url 'batch_create' %}" class="btn btn-primary mb-3">Create New Batch</a>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Year</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for batch in batches %}
+            <tr>
+                <td>{{ batch.name }}</td>
+                <td>{{ batch.year }}</td>
+                <td>
+                    <a href="{% url 'batch_update' batch.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="{% url 'batch_delete' batch.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

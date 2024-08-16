@@ -1,0 +1,15 @@
+{%extends "examination/home.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Add/Update Student{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{% if object %}Update{% else %}Add{% endif %} Student</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-success mt-3">Save</button>
+        <a href="{% url 'student_list' %}" class="btn btn-secondary mt-3">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "home.html" %}
+
+{% block content %}
+<h2>Course: {{ course.name }}</h2>
+<p><strong>Average Score:</strong> {{ average_score|floatformat:2 }}</p>
+{% endblock %}
